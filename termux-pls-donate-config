@@ -1,43 +1,36 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Give Termux storage access (first run shows a prompt)
+
 if [ ! -d "/storage/emulated/0" ]; then
   termux-setup-storage
 fi
-
-AUTOEXEC="/storage/emulated/0/Arceus X/Autoexec"
-WORKSPACE="/storage/emulated/0/Arceus X/Workspace"
+# config (change paths if you want)
+AUTOEXEC="/storage/emulated/0/Delta/Autoexecute"
+WORKSPACE="/storage/emulated/0/Delta/Workspace"
 
 mkdir -p "$AUTOEXEC" "$WORKSPACE"
 
-# --- File: reconnect.txt ---
+# reconnect.txt config
 cat <<'LUA' > "$AUTOEXEC/reconnect.txt"
 loadstring(game:HttpGet('https://raw.githubusercontent.com/nullus7/reconnect/refs/heads/main/checkonline.lua'))()
 wait(10)
 loadstring(game:HttpGet('https://raw.githubusercontent.com/nullus7/reconnect/refs/heads/main/checkonline.lua'))()
 LUA
 
-# --- File: plsdonate.txt ---
+# pls donate script
 cat <<'LUA' > "$AUTOEXEC/plsdonate.txt"
 wait(11)
-loadstring(game:HttpGet("https://raw.githubusercontent.com/CF-Trail/tzechco-PlsDonateAutofarmBackup/main/old.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/XFizly/tzechco-PlsDonateAutofarmBackup/refs/heads/main/old.lua"))()
 LUA
 
-# --- File: fpslimited.txt ---
-cat <<'LUA' > "$AUTOEXEC/fpslimited.txt"
-local RunService = game:GetService("RunService")
-local MaxFPS = 20
-while true do
-    local t0 = tick()
-    RunService.RenderStepped:Wait()
-    repeat until (t0 + 1/MaxFPS) < tick()
-end
+# fps limit
+setfpslimit(30)
 LUA
 
-# --- File: plsdonatesettings.txt (valid JSON) ---
-# NOTE: I fixed typos/quotes and kept your text + colors.
-# If you use a Discord webhook, treat it as a secret (anyone with it can post to your channel).
+# pls donate config v1.1
+
+
 cat <<'JSON' > "$WORKSPACE/plsdonatesettings.txt"
 {
   "render": true,
@@ -119,5 +112,5 @@ echo "Done!"
 echo "Created:"
 echo "  $AUTOEXEC/reconnect.txt"
 echo "  $AUTOEXEC/plsdonate.txt"
-echo "  $AUTOEXEC/fpslimited.txt"
+# echo "  $AUTOEXEC/fpslimited.txt" (remove # if you want fps limit)
 echo "  $WORKSPACE/plsdonatesettings.txt"
